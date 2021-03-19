@@ -2,6 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
+public class ItemFollow
+{
+    public Transform item;
+    public float maxLimit;
+    public float minLimit;
+    public float moveFactor;
+}
+
 public class CameraFollow : MonoBehaviour
 {
 
@@ -10,77 +19,43 @@ public class CameraFollow : MonoBehaviour
     public float minLimitVertical;
     public float maxLimit;
     public float minLimit;
-    public List<ItemFollow> itensFollow;
 
+    private Vector3 cameraPos;
+    private Vector3 lastCameraPos;
 
-    [System.Serializable]
-    public class ItemFollow
-    {
-        public Transform item;
-        public float maxLimit;
-        public float minLimit;
-        public float moveFactor;
-    }
+    public GameObject hud;
 
-
-    private Vector3 newPosition = new Vector3(0, 0, -10);
-    private Vector3 lastPosition;
-
-
-    // Use this for initialization
     void Start()
     {
+        cameraPos = new Vector3(0, 0, -10);
+        lastCameraPos = new Vector3(0, 0, -10);
 
     }
-
-    // Update is called once per frame
     void LateUpdate()
     {
 
-        newPosition.x = target.position.x;
-        newPosition.y = target.position.y;
+        cameraPos.x = target.position.x;
+        cameraPos.y = target.position.y;
 
-
-        if (newPosition != lastPosition)
+        if (cameraPos != lastCameraPos)
         {
 
-            newPosition.x = Mathf.Clamp(newPosition.x, minLimit, maxLimit);
-            newPosition.y = Mathf.Clamp(newPosition.y, minLimitVertical, maxLimitVertical);
+            cameraPos.x = Mathf.Clamp(cameraPos.x, minLimit, maxLimit);
+            cameraPos.y = Mathf.Clamp(cameraPos.y, minLimitVertical, maxLimitVertical);
 
-            transform.position = newPosition;
+            transform.position = cameraPos;
+            lastCameraPos = cameraPos;
 
+            Vector3 hudPosition = hud.transform.position;
 
+            hudPosition.x = cameraPos.x;
+            hudPosition.y = cameraPos.y;
 
-            Vector3 newPositionItem;
-
-            foreach (ItemFollow p in itensFollow)
-            {
-
-                newPositionItem = p.item.localPosition;
-
-                newPositionItem.x = Mathf.Clamp(newPositionItem.x, p.minLimit, p.maxLimit);
-
-                p.item.localPosition = newPositionItem;
-
-                if (lastPosition.x < newPosition.x)
-                {
-                    p.item.Translate(Vector3.left * Time.deltaTime * p.moveFactor);
-                }
-                else if (lastPosition.x > newPosition.x)
-                {
-                    p.item.Translate(Vector3.right * Time.deltaTime * p.moveFactor);
-                }
-
-
-
-
-            }
-
-            lastPosition = newPosition;
-
+            hud.transform.position = hudPosition;
 
         }
 
 
     }
+
 }

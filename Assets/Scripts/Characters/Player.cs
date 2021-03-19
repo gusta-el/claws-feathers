@@ -57,6 +57,8 @@ public class Player : MonoBehaviour
     public Prince prince;
     public float _walkSteps;
     public float _flySteps;
+    private Vector3 startPosition;
+
     #endregion
 
     void Start()
@@ -76,6 +78,10 @@ public class Player : MonoBehaviour
             animator = GetComponent<Animator>(),
             body = GetComponent<Rigidbody2D>()
         };
+
+        startPosition = new Vector3(0, 0, 0);
+        transform.position = startPosition;
+
     }
 
     void Update()

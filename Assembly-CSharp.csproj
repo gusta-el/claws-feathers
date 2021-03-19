@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Characters\Player.cs" />
     <Compile Include="Assets\Scripts\Hud\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Hud\Hud.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
