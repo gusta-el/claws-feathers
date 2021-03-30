@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - crow_pass
+  - enemy
+  - river
+  - human_not_pass
   layers:
   - Default
   - TransparentFX

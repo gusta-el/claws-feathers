@@ -19,7 +19,7 @@ public class Prince
     private float _walkSteps;
     private float _flySteps;
     private bool _isTalking;
-    private int _dialogSequence;
+    private bool _hasAlreadyTransmuted;
     #endregion
 
     #region Constructors
@@ -42,7 +42,7 @@ public class Prince
     public bool IsFlyingDown { get => _isFlyingDown; set => _isFlyingDown = value; }
     public Animator animator { get => _animator; set => _animator = value; }
     public Rigidbody2D body { get => _body; set => _body = value; }
-    
+    public bool HasAlreadyTransmuted { get => _hasAlreadyTransmuted; set => _hasAlreadyTransmuted = value; }
     #endregion
 
     #region Prince actions
@@ -58,7 +58,13 @@ public class Player : MonoBehaviour
     public float _walkSteps;
     public float _flySteps;
     private Vector3 startPosition;
+    private GameObject[] obstacles;
+    private GameObject[] enemies;
+    #endregion
 
+    #region Constants
+    private const string ENEMY_TAG = "enemy";
+    private const string HUMAN_NOT_PASS = "human_not_pass";
     #endregion
 
     void Start()
@@ -72,6 +78,7 @@ public class Player : MonoBehaviour
             IsAttacking = false,
             IsFlyingDown = false,
             IsFlyingHigh = false,
+            HasAlreadyTransmuted = false,
             ScaleValue = transform.localScale.x,
             WalkSteps = _walkSteps,
             FlySteps = _flySteps,
@@ -81,6 +88,9 @@ public class Player : MonoBehaviour
 
         startPosition = new Vector3(0, 0, 0);
         transform.position = startPosition;
+
+        obstacles = GameObject.FindGameObjectsWithTag(HUMAN_NOT_PASS);
+        enemies = GameObject.FindGameObjectsWithTag(ENEMY_TAG);
 
     }
 
@@ -108,12 +118,15 @@ public class Player : MonoBehaviour
         if (prince.IsAlive)
         {
             prince.IsMoving = Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
+            prince.IsAttacking = Input.GetKeyDown(KeyCode.Z);
             prince.IsHuman = !Input.GetKey(KeyCode.LeftShift);
             prince.IsRaven = Input.GetKey(KeyCode.LeftShift);
-            prince.IsAttacking = Input.GetKey(KeyCode.Z);
+            prince.HasAlreadyTransmuted = Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftShift);
+
+            UpdatePrinceCollisions();
         }
-        
     }
+
     private void Transform()
     {
 
@@ -122,6 +135,7 @@ public class Player : MonoBehaviour
         prince.animator.SetBool("flying_low", prince.IsFlyingDown);
 
     }
+
     private void Attack()
     {
         
@@ -178,6 +192,33 @@ public class Player : MonoBehaviour
         }
 
         transform.localScale = characterScale;
+    }
+
+    private void UpdatePrinceCollisions()
+    {
+        if (prince.HasAlreadyTransmuted)
+        {
+            foreach (GameObject element in obstacles)
+            {
+                element.GetComponent<Collider2D>().enabled = prince.IsHuman;
+            }
+            foreach (GameObject element in enemies)
+            {
+                element.GetComponent<Collider2D>().isTrigger = prince.IsRaven;
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == ENEMY_TAG)
+        {
+            Debug.Log("passei");
+            Vector2 move = new Vector2(transform.position.x + 10, transform.position.y);
+            prince.body.MovePosition(move);
+
+        }
+
     }
 
 }
