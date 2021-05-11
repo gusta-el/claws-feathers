@@ -17,13 +17,13 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Player
+  - Enemy
+  - River
+  - Hud
+  - Canvas
+  - Fade
   - 
   - 
   - 
@@ -44,4 +44,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 2963460115
+    locked: 0
+  - name: River
+    uniqueID: 3723585471
+    locked: 0
+  - name: Hole
+    uniqueID: 29892139
+    locked: 0
+  - name: Player
+    uniqueID: 1060307971
+    locked: 0
+  - name: Enemy
+    uniqueID: 3647625235
+    locked: 0
+  - name: Canvas
+    uniqueID: 1112741259
     locked: 0
